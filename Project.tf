@@ -21,9 +21,28 @@ resource "azurerm_app_service_plan" "WebServer-SP" {
   }
 }
 
-resource "azurerm_app_service" "WebServer-AS" {
+resource "azurerm_app_service" "WebServer-AS0" {
   count               = 2
-  name                = "Webserver-Sean-${count.index}"
+  name                = "Webserver-${var.User_Name[count.index]}-0"
+  location            = azurerm_resource_group.WebServer-RG[count.index].location
+  resource_group_name = azurerm_resource_group.WebServer-RG[count.index].name
+  app_service_plan_id = azurerm_app_service_plan.WebServer-SP[count.index].id
+
+  tags = {
+    "Student" = "seanlagast"
+  }
+
+    source_control {
+      repo_url           = var.AS_bootstrap
+      branch             = var.AS_bootstrap_branch
+      manual_integration = true
+      use_mercurial      = false
+  }
+}
+
+resource "azurerm_app_service" "WebServer-AS1" {
+  count               = 2
+  name                = "Webserver-${var.User_Name[count.index]}-1"
   location            = azurerm_resource_group.WebServer-RG[count.index].location
   resource_group_name = azurerm_resource_group.WebServer-RG[count.index].name
   app_service_plan_id = azurerm_app_service_plan.WebServer-SP[count.index].id

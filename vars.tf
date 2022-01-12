@@ -8,6 +8,11 @@ variable "RG_Name" {
     default = ["SeanLagast_Terraform","JoeMama_Terraform"]
 }
 
+variable "User_Name" {
+    type = list
+    default = ["SeanLagast","JoeMama"]
+}
+
 variable "RG_Location" {
     default = "westeurope"
 }
