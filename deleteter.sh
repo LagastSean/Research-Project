@@ -1,8 +1,9 @@
 #!/bin/bash
 
 directory=$1
+currentDir=$(pwd)
 
-cd /mnt/d/mct/Research-Project-Start/Project/$directory
+cd $currentDir/$directory
 
 /usr/local/bin/terraform destroy -auto-approve
 

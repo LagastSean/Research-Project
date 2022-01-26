@@ -113,7 +113,8 @@ else
                             then
                                 :
                             else
-                                line="$cronSyntax /mnt/d/mct/Research-Project-Start/Project/deleteter.sh ${DirVar[$setup]} > /var/log/backup.log 2>&1 #${DirVar[$setup]}"
+                                currentDir=$(pwd)
+                                line="$cronSyntax $currentDir/deleteter.sh ${DirVar[$setup]} > /var/log/backup.log 2>&1 #${DirVar[$setup]}"
                                 (crontab -u $(whoami) -l; echo "$line" ) | crontab -u $(whoami) -
                             fi
 
@@ -140,93 +141,3 @@ else
         fi
     fi
 fi
-
-
-#if (( $setup > $((i-1)) ))
-#    then
-#        echo "Pick a given number!"
-#    else
-#        echo "Good job!"
-#    fi
-
-
-
-
-
-
-
-
-#elif [ "$setup" == "1" ]
-#then
-#    echo "You sure you want to build a VM environment?"
-#    echo "1: Yes"
-#    echo "2: No"
-#    read answer
-#    if ! [[ "$answer" =~ ^[0-9]+$ ]]
-#    then
-#        echo "Sorry integers only"
-#    elif [ "$answer" == "1" ]
-#    then
-#        echo "Setting up environment"
-#    elif [ "$answer" == "2" ]
-#    then
-#        echo "Run script again to start over."
-#    else
-#        echo "No corresponding number given!"
-#    fi
-#
-#elif [ "$setup" == "2" ]
-#then
-#    echo "You sure you want to build a VM environment?"
-#    echo "1: Yes"
-#    echo "2: No"
-#    read answer
-#    if ! [[ "$answer" =~ ^[0-9]+$ ]]
-#    then
-#        echo "Sorry integers only"
-#    elif [ "$answer" == "1" ]
-#    then
-#        echo "Setting up environment"
-#        echo "Which csv file would you like to use?"
-#        i=0
-#        for csv in $csvfiles
-#        do
-#            CSVVar+=($csv)
-#            echo "$i: ${csv##*/}"
-#            i=$((i+1))
-#        done
-#        read csvnumber
-#        if ! [[ "$csvnumber" =~ ^[0-9]+$ ]]
-#        then
-#            echo "Sorry integers only"
-#        else
-#            i=0
-#            for csv in "${CSVVar[@]}"
-#            do               
-#                if [ $csvnumber -eq $i ]
-#                then
-#                    echo "Terraform script will now be started!"
-#
-#                fi
-#            i=$((i+1))
-#            done
-#        fi
-#    elif [ "$answer" == "2" ]
-#    then
-#        echo "Run script again to start over."
-#    else
-#        echo "No corresponding number given!"
-#    fi
-#else
-#    echo "No corresponding number given!"
-#fi
-
-
-
-#./Replace-varstf.ps1 './Web/vars.tf'
-
-#terraform plan -out="myplan0"
-#terraform apply "myplan0"
-
-#line="*/20 * * * * /mnt/d/mct/Research-Project-Start/Project/deleteter.sh > /var/log/backup.log 2>&1 #hallo"
-#(crontab -u $(whoami) -l; echo "$line" ) | crontab -u $(whoami) -

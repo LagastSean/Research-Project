@@ -13,9 +13,6 @@ $CSVPath = $param2.replace('/','\')
 
 $Content = Get-Content $Varspath
 
-#$Content = Get-Content ".\vars.tf"
-
-#$CSVPath = '.\Userinfo.csv'
 $UserList = Import-Csv -Path $CSVPath -Delimiter ";"
 
 $UserNameString = ""

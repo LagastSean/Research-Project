@@ -1,8 +1,3 @@
-#variable "Amount" {
-#    description = "Hoeveel webservers wil je deployen?"
-#    type = number
-#}
-
 variable "Amount" {
     default = 2 #Amount
     type = number

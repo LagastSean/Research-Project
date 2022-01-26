@@ -1,8 +1,3 @@
-#provider "azurerm" {
-#  version = "~>2.0"
-#  features {}
-#}
-
 terraform {
   required_providers {
     azurerm = {
@@ -83,19 +78,6 @@ resource "azurerm_app_service" "VMServer-AS1" {
     azurerm_app_service_plan.VMServer-SP,
   ]
 }
-#Werkt niet!
-#resource "azuread_user" "UserId" {
-#  count = 2
-#  user_principal_name = var.Users_Email[count.index]
-#  display_name        = var.Display_Name[count.index]
-#}
-
-#resource "azurerm_role_assignment" "example" {
-#  count = 2
-#  scope                = "/subscriptions/bc9fe0f4-4aa6-4e8a-859a-2909dc00af8e/resourceGroups/${azuread_user.UserId[count.index]}"
-#  role_definition_name = "Contributor"
-#  principal_id         = var.Users[count.index]
-#}
 
 resource "azurerm_role_assignment" "example" {
   count = var.Amount
