@@ -3,6 +3,11 @@ variable "Amount" {
     type = number
 }
 
+variable "Environment" {
+    default = "Infrastructure" #Environment
+    type = string
+}
+
 variable "Users_Email" {
     type = list
     default = ["mathias.de.herdt@student.howest.be","simon.demuynck2@student.howest.be"] #Email
@@ -33,7 +38,7 @@ variable "RG_Location" {
 }
 
 variable "SP_Name" {
-    default = "WebAppServicePlanInfra"
+    default = "WebAppServicePlan"
 }
 
 variable "SP_tier" {

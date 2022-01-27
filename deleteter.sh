@@ -1,9 +1,9 @@
 #!/bin/bash
 
-directory=$1
-currentDir=$(pwd)
+currentDir=$1
+directory=$2
 
-cd $currentDir/$directory
+cd "$currentDir/$directory"
 
 /usr/local/bin/terraform destroy -auto-approve
 

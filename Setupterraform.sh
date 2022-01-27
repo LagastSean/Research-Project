@@ -41,8 +41,9 @@ else
     then
         echo "Pick a given number!"
     else
-        echo ${DirVar[$setup]}
-        echo "You sure you want to build a ${DirVar[$setup]} environment?"
+        usedEnvironment=${DirVar[$setup]}
+        echo ${usedEnvironment::-1}
+        echo "You sure you want to build a ${usedEnvironment::-1} environment?"
         echo "1: Yes"
         echo "2: No"
         read answer
@@ -101,7 +102,7 @@ else
                                 echo "Cron syntax must be exactly like this one between brackets, don't add the brackets"
                                 echo ""
                                 echo "(* * * * *)"
-                                echo "For mor info check: https://crontab.guru/"
+                                echo "For more info check: https://crontab.guru/"
                                 echo ""
                                 echo "Fill in your cron syntax"
                                 read cronSyntax
@@ -114,14 +115,14 @@ else
                                 :
                             else
                                 currentDir=$(pwd)
-                                line="$cronSyntax $currentDir/deleteter.sh ${DirVar[$setup]} > /var/log/backup.log 2>&1 #${DirVar[$setup]}"
+                                line="$cronSyntax $currentDir/deleteter.sh $currentDir ${usedEnvironment::-1} > /var/log/backup.log 2>&1 #${usedEnvironment::-1}"
                                 (crontab -u $(whoami) -l; echo "$line" ) | crontab -u $(whoami) -
                             fi
 
                             echo "Terraform script will now be started!"
-                            ./Replace-varstf.ps1 ${DirVar[$setup]} $csv
+                            ./Replace-varstf.ps1 ${usedEnvironment::-1} $csv
                         
-                            cd ${DirVar[$setup]}
+                            cd $usedEnvironment
                             terraform init
                             terraform validate
                             terraform plan -out="myplan0"

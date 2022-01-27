@@ -11,17 +11,17 @@ provider "azurerm" {
    features {}
 }
 
-resource "azurerm_resource_group" "InfraServer-RG" {
+resource "azurerm_resource_group" "Server-RG" {
   count = var.Amount
-  name     = "${element(var.Users_Name, count.index)}-Infra"
+  name     = "${element(var.Users_Name, count.index)}-${var.Environment}"
   location = var.RG_Location
 }
 
-resource "azurerm_app_service_plan" "InfraServer-SP" {
+resource "azurerm_app_service_plan" "Server-SP" {
   count = var.Amount
   name                = var.SP_Name
-  location            = azurerm_resource_group.InfraServer-RG[count.index].location
-  resource_group_name = azurerm_resource_group.InfraServer-RG[count.index].name
+  location            = azurerm_resource_group.Server-RG[count.index].location
+  resource_group_name = azurerm_resource_group.Server-RG[count.index].name
 
   sku {
     tier              = var.SP_tier
@@ -29,16 +29,16 @@ resource "azurerm_app_service_plan" "InfraServer-SP" {
   }
 
   depends_on = [
-    azurerm_resource_group.InfraServer-RG,
+    azurerm_resource_group.Server-RG,
   ]
 }
 
-resource "azurerm_app_service" "InfraServer-AS0" {
+resource "azurerm_app_service" "Server-AS0" {
   count               = var.Amount
-  name                = "Infraserver${var.Users_Name[count.index]}0"
-  location            = azurerm_resource_group.InfraServer-RG[count.index].location
-  resource_group_name = azurerm_resource_group.InfraServer-RG[count.index].name
-  app_service_plan_id = azurerm_app_service_plan.InfraServer-SP[count.index].id
+  name                = "${var.Environment}server-${var.Users_Name[count.index]}-0"
+  location            = azurerm_resource_group.Server-RG[count.index].location
+  resource_group_name = azurerm_resource_group.Server-RG[count.index].name
+  app_service_plan_id = azurerm_app_service_plan.Server-SP[count.index].id
 
   tags = {
     "Student" = "seanlagast"
@@ -52,16 +52,16 @@ resource "azurerm_app_service" "InfraServer-AS0" {
   }
 
   depends_on = [
-    azurerm_app_service_plan.InfraServer-SP,
+    azurerm_app_service_plan.Server-SP,
   ]
 }
 
-resource "azurerm_app_service" "InfraServer-AS1" {
+resource "azurerm_app_service" "Server-AS1" {
   count               = var.Amount
-  name                = "Infraserver${var.Users_Name[count.index]}1"
-  location            = azurerm_resource_group.InfraServer-RG[count.index].location
-  resource_group_name = azurerm_resource_group.InfraServer-RG[count.index].name
-  app_service_plan_id = azurerm_app_service_plan.InfraServer-SP[count.index].id
+  name                = "${var.Environment}-${var.Users_Name[count.index]}-1"
+  location            = azurerm_resource_group.Server-RG[count.index].location
+  resource_group_name = azurerm_resource_group.Server-RG[count.index].name
+  app_service_plan_id = azurerm_app_service_plan.Server-SP[count.index].id
 
   tags = {
     "Student" = "seanlagast"
@@ -75,17 +75,17 @@ resource "azurerm_app_service" "InfraServer-AS1" {
   }
 
   depends_on = [
-    azurerm_app_service_plan.InfraServer-SP,
+    azurerm_app_service_plan.Server-SP,
   ]
 }
 
 resource "azurerm_role_assignment" "example" {
   count = var.Amount
-  scope                = "/subscriptions/bc9fe0f4-4aa6-4e8a-859a-2909dc00af8e/resourceGroups/${var.Users_Name[count.index]}-Infra"
+  scope                = "/subscriptions/bc9fe0f4-4aa6-4e8a-859a-2909dc00af8e/resourceGroups/${var.Users_Name[count.index]}-${var.Environment}"
   role_definition_name = "Contributor"
   principal_id         = var.Users_Id[count.index]
 
   depends_on = [
-    azurerm_resource_group.InfraServer-RG,
+    azurerm_resource_group.Server-RG,
   ]
 }
