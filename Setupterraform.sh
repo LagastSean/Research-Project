@@ -120,7 +120,7 @@ else
                             fi
 
                             echo "Terraform script will now be started!"
-                            ./Replace-varstf.ps1 ${usedEnvironment::-1} $csv
+                            pwsh Replace-varstf.ps1 ${usedEnvironment::-1} $csv
                         
                             cd $usedEnvironment
                             terraform init
