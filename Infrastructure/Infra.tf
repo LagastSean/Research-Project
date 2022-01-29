@@ -64,7 +64,8 @@ resource "azurerm_app_service" "Server-AS1" {
   app_service_plan_id = azurerm_app_service_plan.Server-SP[count.index].id
 
   tags = {
-    "Student" = "seanlagast"
+    "Student-email" = "${var.Users_Email[count.index]}",
+    "Student-name" = "${var.Users_Name[count.index]}"
   }
 
     source_control {
