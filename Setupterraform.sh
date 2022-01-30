@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Variables
+#Variables setup
 cronSyntax=""
 
 csvfiles=$(find ./CSVFiles/ -type f -name "*.csv")
@@ -22,6 +22,8 @@ for dir in $ListDir
         fi
     done
 
+
+#Start script
 echo "Welcome to the terraform setup script."
 echo ""
 echo "Which environment would you like to setup?"
@@ -43,7 +45,7 @@ else
     else
         usedEnvironment=${DirVar[$setup]}
         echo ${usedEnvironment::-1}
-        echo "You sure you want to build a ${usedEnvironment::-1} environment?"
+        echo "Are you sure you want to build a ${usedEnvironment::-1} environment?"
         echo "1: Yes"
         echo "2: No"
         read answer
@@ -104,7 +106,7 @@ else
                                 echo "(* * * * *)"
                                 echo "For more info check: https://crontab.guru/"
                                 echo ""
-                                echo "Fill in your cron syntax"
+                                echo "Fill in your cron syntax:"
                                 read cronSyntax
                             else
                                 echo "Pick a given number!"
@@ -142,3 +144,4 @@ else
         fi
     fi
 fi
+#End script

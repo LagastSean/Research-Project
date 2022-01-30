@@ -1,26 +1,32 @@
 #!/usr/bin/pwsh -Command
 
-$param1=$args[0]
-$param2=$args[1]
+#Variables send by the Setup script
+$usedEnvironment=$args[0]
+$csv=$args[1]
 
+#Creating correct path to vars.tf file
 $string1=".\"
-$string2="$param1\"
+$string2="$usedEnvironment\"
 $string3="vars.tf"
-
 $Varspath=$string1+$string2+$string3
 
-$CSVPath = $param2.replace('/','\')
+#Replacing / syntax by \
+$CSVPath = $csv.replace('/','\')
 
-$Content = Get-Content $Varspath
-
+#Importing csv file
 $UserList = Import-Csv -Path $CSVPath -Delimiter ";"
 
+#Getting the content of the Varspath
+$Content = Get-Content $Varspath
+
+#Initiating variables for later use
 $UserNameString = ""
 $EmailString = ""
 $IdString = ""
 $AmountUsers = 0
 $Environment = ""
 
+#Looping through the csv file
 Foreach ($User in $UserList) 
 {
     $AmountUsers = ($AmountUsers + 1)
@@ -36,6 +42,6 @@ Foreach ($User in $UserList)
 $UserNameString = $UserNameString.TrimEnd(',')
 $EmailString = $EmailString.TrimEnd(',')
 $IdString = $IdString.TrimEnd(',')
-$Environment = $param1
+$Environment = $usedEnvironment
 
 $Content | ForEach-Object { $_ -replace ".+#UserName","    default = [$UserNameString] #UserName" } | ForEach-Object { $_ -replace ".+#Email","    default = [$EmailString] #Email" } | ForEach-Object { $_ -replace ".+#Id","    default = [$IdString] #Id" } | ForEach-Object { $_ -replace ".+#Amount","    default = $AmountUsers #Amount" } | ForEach-Object { $_ -replace ".+#Environment","    default = `"$Environment`" #Environment" } | Set-Content $Varspath
