@@ -15,6 +15,11 @@ resource "azurerm_resource_group" "Server-RG" {
   count = var.Amount
   name     = "${element(var.Users_Name, count.index)}-${var.Environment}"
   location = var.RG_Location
+
+  tags = {
+    "Student-email" = "${var.Users_Email[count.index]}",
+    "Student-name" = "${var.Users_Name[count.index]}"
+  }
 }
 
 resource "azurerm_app_service_plan" "Server-SP" {
@@ -23,6 +28,11 @@ resource "azurerm_app_service_plan" "Server-SP" {
   location            = azurerm_resource_group.Server-RG[count.index].location
   resource_group_name = azurerm_resource_group.Server-RG[count.index].name
 
+  tags = {
+    "Student-email" = "${var.Users_Email[count.index]}",
+    "Student-name" = "${var.Users_Name[count.index]}"
+  }
+  
   sku {
     tier              = var.SP_tier
     size              = var.SP_size
@@ -41,7 +51,8 @@ resource "azurerm_app_service" "Server-AS0" {
   app_service_plan_id = azurerm_app_service_plan.Server-SP[count.index].id
 
   tags = {
-    "Student" = "seanlagast"
+    "Student-email" = "${var.Users_Email[count.index]}",
+    "Student-name" = "${var.Users_Name[count.index]}"
   }
 
     source_control {

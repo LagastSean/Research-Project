@@ -125,8 +125,8 @@ else
                             cd $usedEnvironment
                             terraform init
                             terraform validate
-                            terraform plan -out="myplan0"
-                            terraform apply "myplan0"
+                            terraform plan
+                            terraform apply
                         fi
                     else
                         :
