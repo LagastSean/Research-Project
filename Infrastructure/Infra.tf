@@ -45,7 +45,7 @@ resource "azurerm_app_service_plan" "Server-SP" {
 
 resource "azurerm_app_service" "Server-AS0" {
   count               = var.Amount
-  name                = "${var.Environment}server-${var.Users_Name[count.index]}-0"
+  name                = "${var.Environment}-${var.Users_Name[count.index]}-0"
   location            = azurerm_resource_group.Server-RG[count.index].location
   resource_group_name = azurerm_resource_group.Server-RG[count.index].name
   app_service_plan_id = azurerm_app_service_plan.Server-SP[count.index].id
