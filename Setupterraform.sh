@@ -25,6 +25,7 @@ for dir in $ListDir
 
 #Start script
 echo "Welcome to the terraform setup script."
+echo "Answer by giving the number corresponding the category!"
 echo ""
 echo "Which environment would you like to setup?"
 for dir in "${DirVar[@]}"
@@ -32,29 +33,29 @@ for dir in "${DirVar[@]}"
         echo "$i: ${dir::-1}"
         i=$((i+1))
     done
-echo "Answer by giving the number corresponding the category!"
 read setup
-
+echo ""
 if ! [[ "$setup" =~ ^[0-9]+$ ]]
 then
-    echo "Sorry integers only"
+    echo "Sorry integers only!"
 else
     if [ -z ${DirVar[$setup]} ]
     then
         echo "Pick a given number!"
     else
         usedEnvironment=${DirVar[$setup]}
-        echo ${usedEnvironment::-1}
         echo "Are you sure you want to build a ${usedEnvironment::-1} environment?"
         echo "1: Yes"
         echo "2: No"
         read answer
+        echo ""
         if ! [[ "$answer" =~ ^[0-9]+$ ]]
         then
-            echo "Sorry integers only"
+            echo "Sorry integers only!"
         elif [ "$answer" == "1" ]
         then
-            echo "Setting up environment"
+            echo "Setting up environment.."
+            echo ""
             echo "Which csv file would you like to use?"
             i=0
             for csv in $csvfiles
@@ -64,25 +65,31 @@ else
                 i=$((i+1))
             done
             read csvnumber
+            echo ""
             if ! [[ "$csvnumber" =~ ^[0-9]+$ ]]
             then
-                echo "Sorry integers only"
+                echo "Sorry integers only!"
+            elif [ -z ${CSVVar[$csvnumber]} ]
+            then
+                echo "Pick a given number!"
             else
                 i=0
+                check=0
                 for csv in "${CSVVar[@]}"
                 do               
                     if [ $csvnumber -eq $i ]
                     then
-                        echo "How long do you want the environment to exist!"
+                        echo "How long do you want the environment to exist?"
                         echo "1: Forever"
                         echo "2: 2 hours"
                         echo "3: 1 day"
                         echo "4: 1 week"
                         echo "5: Fill in own crontab syntax"
                         read duration
+                        echo ""
                         if ! [[ "$duration" =~ ^[0-9]+$ ]]
                         then
-                            echo "Sorry integers only"
+                            echo "Sorry integers only!"
                         else
                             if [ "$duration" -eq "1" ]
                             then
@@ -104,31 +111,38 @@ else
                                 echo "Cron syntax must be exactly like this one between brackets, don't add the brackets"
                                 echo ""
                                 echo "(* * * * *)"
+                                echo ""
                                 echo "For more info check: https://crontab.guru/"
                                 echo ""
                                 echo "Fill in your cron syntax:"
                                 read cronSyntax
                             else
                                 echo "Pick a given number!"
+                                check=1
                             fi
 
-                            if [ -z "$cronSyntax" ]
+                            if [ $check -eq 1 ]
                             then
                                 :
                             else
-                                currentDir=$(pwd)
-                                line="$cronSyntax $currentDir/deleteter.sh $currentDir ${usedEnvironment::-1} > /var/log/backup.log 2>&1 #${usedEnvironment::-1}"
-                                (crontab -u $(whoami) -l; echo "$line" ) | crontab -u $(whoami) -
-                            fi
+                                if [ -z "$cronSyntax" ]
+                                then
+                                    echo "No crontab record will be made"
+                                else
+                                    currentDir=$(pwd)
+                                    line="$cronSyntax $currentDir/deleteter.sh $currentDir ${usedEnvironment::-1} > /var/log/backup.log 2>&1 #${usedEnvironment::-1}"
+                                    (crontab -u $(whoami) -l; echo "$line" ) | crontab -u $(whoami) -
+                                fi
 
-                            echo "Terraform script will now be started!"
-                            pwsh Replace-varstf.ps1 ${usedEnvironment::-1} $csv
-                        
-                            cd $usedEnvironment
-                            terraform init
-                            terraform validate
-                            terraform plan
-                            terraform apply
+                                echo "Terraform script will now be executed!"
+                                pwsh Replace-varstf.ps1 ${usedEnvironment::-1} $csv
+
+                                cd $usedEnvironment
+                                terraform init
+                                terraform validate
+                                terraform plan -out="plan"
+                                terraform apply "plan"
+                            fi
                         fi
                     else
                         :
