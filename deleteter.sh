@@ -7,7 +7,7 @@ directory=$2
 #Go into correct terraform environment
 cd "$currentDir/$directory"
 
-#Destroy environment
+#Destroy terraform environment
 /usr/local/bin/terraform destroy -auto-approve
 
 #Delete crontab
