@@ -37,8 +37,8 @@ Foreach ($User in $UserList)
 	$UserNameString = "$UserNameString" + "`"$UserName`","
     $EmailString = "$EmailString" + "`"$Email`","
     $IdString = "$IdString" + "`"$Id`","
-
 }
+
 $UserNameString = $UserNameString.TrimEnd(',')
 $EmailString = $EmailString.TrimEnd(',')
 $IdString = $IdString.TrimEnd(',')

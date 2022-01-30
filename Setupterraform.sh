@@ -10,17 +10,17 @@ ListDir=$(ls -d */)
 DirVar=()
 i=0
 for dir in $ListDir
-    do
-        if [ "${dir::-1}" == "venv" ]
-        then
-            :
-        elif [ "${dir::-1}" == "CSVFiles" ]
-        then
-            :
-        else
-            DirVar+=($dir)
-        fi
-    done
+do
+    if [ "${dir::-1}" == "venv" ]
+    then
+        :
+    elif [ "${dir::-1}" == "CSVFiles" ]
+    then
+        :
+    else
+        DirVar+=($dir)
+    fi
+done
 
 
 #Start script
@@ -45,14 +45,14 @@ else
     else
         usedEnvironment=${DirVar[$setup]}
         echo "Are you sure you want to build a ${usedEnvironment::-1} environment?"
-        echo "1: Yes"
-        echo "2: No"
+        echo "0: Yes"
+        echo "1: No"
         read answer
         echo ""
         if ! [[ "$answer" =~ ^[0-9]+$ ]]
         then
             echo "Sorry integers only!"
-        elif [ "$answer" == "1" ]
+        elif [ "$answer" == "0" ]
         then
             echo "Setting up environment.."
             echo ""
@@ -80,33 +80,33 @@ else
                     if [ $csvnumber -eq $i ]
                     then
                         echo "How long do you want the environment to exist?"
-                        echo "1: Forever"
-                        echo "2: 2 hours"
-                        echo "3: 1 day"
-                        echo "4: 1 week"
-                        echo "5: Fill in own crontab syntax"
+                        echo "0: Forever"
+                        echo "1: 2 hours"
+                        echo "2: 1 day"
+                        echo "3: 1 week"
+                        echo "4: Fill in own crontab syntax"
                         read duration
                         echo ""
                         if ! [[ "$duration" =~ ^[0-9]+$ ]]
                         then
                             echo "Sorry integers only!"
                         else
-                            if [ "$duration" -eq "1" ]
+                            if [ "$duration" -eq "0" ]
                             then
                                 :
-                            elif [ "$duration" -eq "2" ]
+                            elif [ "$duration" -eq "1" ]
                             then
                                 newDate=$(date +"%Y-%m-%d %T" -d "+2 hours")
                                 cronSyntax="${newDate:14:2} ${newDate:11:2} ${newDate:8:2} ${newDate:5:2} *"
-                            elif [ "$duration" -eq "3" ]
+                            elif [ "$duration" -eq "2" ]
                             then
                                 newDate=$(date +"%Y-%m-%d %T" -d "+1 day")
                                 cronSyntax="${newDate:14:2} ${newDate:11:2} ${newDate:8:2} ${newDate:5:2} *"
-                            elif [ "$duration" -eq "4" ]
+                            elif [ "$duration" -eq "3" ]
                             then
                                 newDate=$(date +"%Y-%m-%d %T" -d "+1 week")
                                 cronSyntax="${newDate:14:2} ${newDate:11:2} ${newDate:8:2} ${newDate:5:2} *"
-                            elif [ "$duration" -eq "5" ]
+                            elif [ "$duration" -eq "4" ]
                             then
                                 echo "Cron syntax must be exactly like this one between brackets, don't add the brackets"
                                 echo ""
@@ -130,7 +130,7 @@ else
                                     echo "No crontab record will be made"
                                 else
                                     currentDir=$(pwd)
-                                    line="$cronSyntax $currentDir/deleteter.sh $currentDir ${usedEnvironment::-1} > /var/log/backup.log 2>&1 #${usedEnvironment::-1}"
+                                    line="$cronSyntax $currentDir/Deleteter.sh $currentDir ${usedEnvironment::-1} > /var/log/backup.log 2>&1 #${usedEnvironment::-1}"
                                     (crontab -u $(whoami) -l; echo "$line" ) | crontab -u $(whoami) -
                                 fi
 
@@ -150,7 +150,7 @@ else
                 i=$((i+1))
                 done
             fi
-        elif [ "$answer" == "2" ]
+        elif [ "$answer" == "1" ]
         then
             echo "Run script again to start over."
         else
